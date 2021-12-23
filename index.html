@@ -11,23 +11,70 @@
 </head>
 <body>
 
-<div id="login-example">
-    <user-login></user-login>
+<div id="app">
+    <nav>
+        <router-link to="/top">トップページ</router-link>
+        <router-link to="/users">ユーザー一覧ページ</router-link>
+    </nav>
+    <router-view></router-view>
 </div>
 
-<script type="text/x-template" id="login-template">
+<script type="text/x-template" id="user-list">
     <div>
-        <div>
-            <input type="text" placeholder="ログインID" v-model="userId" />
+        <div class="loading" v-if="loading">
+            読み込み中...
+        </div>
+        <div class="error" v-if="error">
+            {{error}}
+        </div>
+        <div v-for="user in users" :key="user.id">
+            <h2>{{user.name}}</h2>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="user-detail">
+    <div>
+        <div class="loading" v-if="loading">
+            読み込み中...
+        </div>
+        <div class="error" v-if="error">
+            {{error}}
+        </div>
+        <div v-if="user">
+            <h2>{{user.name}}</h2>
+            <p>{{user.description}}</p>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="user-create">
+    <div>
+        <div class="sending" v-if="sending">
+            Sending...
         </div>
         <div>
-            <input type="password" placeholder="パスワード" v-model="password" />
+            <h2>新規ユーザー作成</h2>
+            <div>
+                <label>名前: </label>
+                <input type="text" v-model="user.name" />
+            </div>
+            <div>
+                <label>説明文: </label>
+                <textarea v-model="user.description"></textarea>
+            </div>
+            <div class="error" v-if="error">
+                {{error}}
+            </div>
+            <div>
+                <input type="button" @click="createUser" value="送信" />
+            </div>
         </div>
-        <button @click="login()">ログイン</button>
     </div>
 </script>
 
 <script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-router"></script>
 <script src="app.js"></script>
 
 </body>
