@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>My first Vue app</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"
+    />
+    <link href="index.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="login-example">
+    <user-login></user-login>
+</div>
+
+<script type="text/x-template" id="login-template">
+    <div>
+        <div>
+            <input type="text" placeholder="ログインID" v-model="userId" />
+        </div>
+        <div>
+            <input type="password" placeholder="パスワード" v-model="password" />
+        </div>
+        <button @click="login()">ログイン</button>
+    </div>
+</script>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
