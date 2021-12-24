@@ -1,3 +1,31 @@
+const Auth = {
+  login: function (email, pass, cb) {
+    // ダミーデータを使った擬似ログイン
+    setTimeout(function () {
+      if (email === "vue@example.com" && pass === "vue") {
+        // ログイン成功時はローカルストレージにtokenを保存する
+        localStorage.token = Math.random().toString(36).substring(7);
+        if (cb) {
+          cb(true);
+        }
+      } else {
+        if (cb) {
+          cb(false);
+        }
+      }
+    }, 0);
+  },
+
+  logout: function () {
+    delete localStorage.token;
+  },
+
+  loggedIn: function () {
+    // ローカルストレージにtokenがあればログイン状態とみなす
+    return !!localStorage.token;
+  },
+};
+
 const userData = [
   {
     id: 1,
@@ -154,6 +182,33 @@ const UserCreate = {
   },
 };
 
+const Login = {
+  template: "#login",
+  data: function () {
+    return {
+      email: "vue@example.com",
+      pass: "",
+      error: false,
+    };
+  },
+  methods: {
+    login: function () {
+      Auth.login(
+        this.email,
+        this.pass,
+        function (loggedIn) {
+          if (!loggedIn) {
+            this.error = true;
+          } else {
+            // redirectパラメーターが付いている場合はそのパスに遷移
+            this.$router.replace(this.$route.query.redirect || "/");
+          }
+        }.bind(this)
+      );
+    },
+  },
+};
+
 const router = new VueRouter({
   routes: [
     {
@@ -169,14 +224,44 @@ const router = new VueRouter({
     {
       path: "/users/new",
       component: UserCreate,
+      beforeEnter: function (to, from, next) {
+        // 認証されていない状態でアクセスした時はloginページに遷移する
+        if (!Auth.loggedIn()) {
+          next({
+            path: "/login",
+            query: { redirect: to.fullPath },
+          });
+        } else {
+          // 認証済みであればそのまま新規ユーザー作成ページへ進む
+          next();
+        }
+      },
     },
     {
       path: "/users/:userId",
       component: UserDetail,
     },
+    {
+      path: "/login",
+      component: Login,
+    },
+    {
+      path: "/logout",
+      beforeEnter: function (to, from, next) {
+        Auth.logout();
+        next("/");
+      },
+    },
+    {
+      path: "*",
+      redirect: "/top",
+    },
   ],
 });
 
 new Vue({
+  data: {
+    Auth,
+  },
   router,
 }).$mount("#app");
