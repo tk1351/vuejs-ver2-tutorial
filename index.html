@@ -3,19 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <title>My first Vue app</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"
-    />
+<!--    <link-->
+<!--      rel="stylesheet"-->
+<!--      href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"-->
+<!--    />-->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" />
     <link href="index.css" rel="stylesheet" />
   </head>
   <body>
     <div id="app">
-      <todo-list :todos="todos">
-        <li slot-scope="{todo}" v-if="todo.isCompleted">
-          {{todo.text}}
-        </li>
-      </todo-list>
+      <login-required-page></login-required-page>
     </div>
 
     <script src="https://unpkg.com/vue"></script>

@@ -1,36 +1,35 @@
-const TodoList = {
-  props: {
-    todos: {
-      type: Array,
-      required: true
+Vue.mixin({
+  data: function () {
+    return {
+      loggedInUser: null
     }
   },
+  created: function () {
+    const auth = this.$options.auth
+    this.loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'))
+    if (auth && !this.loggedInUser) {
+      window.alert('このページはログインが必要です')
+    }
+  }
+})
+
+const LoginRequiredPage = {
+  auth: true,
   template: `
-    <ul>
-        <template v-for="todo in todos">
-            <slot :todo="todo">
-                <li :key="todo.id">
-                {{todo.text}}
-              </li>
-            </slot>
-        </template>
-    </ul>
+    <div>
+    <p v-if="!loggedInUser"> 
+    このページはログインが必要です
+</p>
+<p v-else>
+    {{loggedInUser.name}}さんでログインしています
+</p>
+</div>
   `
 }
 
-new Vue({
+const vm = new Vue({
   el: '#app',
   components: {
-    TodoList,
-  },
-  data: function () {
-    return {
-      todos: [
-        { id: 1, text: 'C#', isCompleted: true },
-        { id: 2, text: 'React', isCompleted: false },
-        { id: 3, text: 'Java', isCompleted: true },
-        { id: 4, text: 'Perl', isCompleted: false },
-      ]
-    }
+    LoginRequiredPage
   }
 })
